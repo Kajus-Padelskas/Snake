@@ -17,7 +17,7 @@ namespace Snake
             {
                 while (game.IsGameOver)
                 {
-                    var userInput = Console.ReadKey();
+                    var userInput = Console.ReadKey(true);
                     Console.WriteLine();
                     game.ProcessUserCommand(userInput);
                 }

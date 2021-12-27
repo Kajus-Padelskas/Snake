@@ -5,14 +5,14 @@ using Snake.Renderer;
 
 namespace Snake
 {
-    class SnakeGame
+    internal class SnakeGame
     {
         private readonly Snake _snake;
         private readonly Apple _apple;
         private readonly Board _gameBoard;
+        private readonly KeyBoardController _controller;
         private IRenderer _renderer;
         private ICommand _command;
-        private char _lastUserInput;
         public bool IsGameOver { get; set; }
         public SnakeGame(int mapSize)
         {
@@ -22,7 +22,7 @@ namespace Snake
             _renderer = new CLIRenderer(_gameBoard, _snake, _apple);
             IsGameOver = true;
             _command = new MoveRight(_snake);
-            _lastUserInput = 'd';
+            _controller = new KeyBoardController(this);
         }
 
         public void UseCLIRenderer(bool b)
@@ -42,8 +42,7 @@ namespace Snake
         public void StartGame()
         {
             GenerateNewApplePosition();
-            KeyBoardController controller = new KeyBoardController(this);
-            controller.KeyboardThread.Start();
+            _controller.KeyboardThread.Start();
             while (IsGameOver)
             {
                 _renderer.Render();
@@ -83,7 +82,7 @@ namespace Snake
             {
                 if (CommandIsOpposite(userInput.KeyChar)) return;
                 _command = GetUserCommand(userInput.KeyChar);
-                _lastUserInput = userInput.KeyChar;
+                _controller.LastUserInput = userInput.KeyChar;
             }
             catch (Exception e)
             {
@@ -93,9 +92,9 @@ namespace Snake
 
         private bool CommandIsOpposite(char userInput)
         {
-            if ((_lastUserInput == 'd' && userInput == 'a') || (_lastUserInput == 'a' && userInput == 'd')) 
+            if ((_controller.LastUserInput == 'd' && userInput == 'a') || (_controller.LastUserInput == 'a' && userInput == 'd')) 
                 return true;
-            if ((_lastUserInput == 'w' && userInput == 's') || (_lastUserInput == 's' && userInput == 'w'))
+            if ((_controller.LastUserInput == 'w' && userInput == 's') || (_controller.LastUserInput == 's' && userInput == 'w'))
                 return true;
             return false;
         }

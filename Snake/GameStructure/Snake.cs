@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Snake
 {
-    class Snake
+    internal class Snake
     {
         public Queue<Point> SnakeBodyPositions { get; set; } 
         public Point SnakeTailPosition { get; set; }
@@ -101,7 +101,7 @@ namespace Snake
             }
         }
 
-        internal bool DidHeadCollideWithBody()
+        public bool DidHeadCollideWithBody()
         {
             var snakeBody = SnakeBodyPositions.ToArray();
             for (var i = 0; i < snakeBody.Length-1; i++)

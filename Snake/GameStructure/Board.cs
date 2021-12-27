@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Snake
 {
-    public class Board
+    internal class Board
     {
         public Board(int size)
         {

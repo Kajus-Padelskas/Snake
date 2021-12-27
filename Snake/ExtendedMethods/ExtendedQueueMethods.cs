@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    static class ExtendedQueueMethods
+    internal static class ExtendedQueueMethods
     {
         public static void AddFirst(this Queue<Point> queue, Point point)
         {

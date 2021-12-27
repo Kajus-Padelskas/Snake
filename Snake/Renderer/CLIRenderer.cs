@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    class CLIRenderer : IRenderer
+    internal class CLIRenderer : IRenderer
     {
         private readonly Board _mapBoard;
         private readonly Snake _snake;

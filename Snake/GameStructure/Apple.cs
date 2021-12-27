@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    class Apple
+    internal class Apple
     {
         public Point Position { get; set; }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snake.Renderer
 {
-    class GUIRenderer : IRenderer
+    internal class GUIRenderer : IRenderer
     {
         private readonly Snake _snake;
         private readonly Apple _apple;

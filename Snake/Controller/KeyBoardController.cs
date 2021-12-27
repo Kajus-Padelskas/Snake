@@ -20,7 +20,7 @@ namespace Snake
                 {
                     var userInput = Console.ReadKey(true);
                     game.ProcessUserCommand(userInput);
-                    Thread.Sleep(500);
+                    Thread.Sleep(Constants.TIME_OUT_FOR_USER_INPUT);
                 }
             });
         }

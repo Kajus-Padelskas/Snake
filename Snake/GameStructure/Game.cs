@@ -46,7 +46,7 @@ namespace Snake
             while (IsGameOver)
             {
                 _renderer.Render();
-                Thread.Sleep(500);
+                Thread.Sleep(Constants.TIME_OUT_FOR_RENDERING);
                 _command.execute();
                 if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
                 {

@@ -6,7 +6,7 @@ namespace Snake
 {
     class Snake
     {
-        public Queue<Point> SnakeBodyPositions { get; set; } // Pabandyti Deque cia naudoti
+        public Queue<Point> SnakeBodyPositions { get; set; } 
         public Point SnakeTailPosition { get; set; }
         public Point SnakeHeadPosition { get; set; }
 

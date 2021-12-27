@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Snake
 {
-    class Renderer
+    class CLIRenderer
     {
         private readonly Board _mapBoard;
         private readonly Snake _snake;
         private readonly Apple _apple;
-        public Renderer(Board map, Snake snake, Apple apple)
+        public CLIRenderer(Board map, Snake snake, Apple apple)
         {
             this._mapBoard = map;
             this._snake = snake;

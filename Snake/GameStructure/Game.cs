@@ -6,7 +6,7 @@ namespace Snake
 {
     class SnakeGame
     {
-        private readonly Renderer _renderer;
+        private readonly CLIRenderer _cliRenderer;
         private readonly Snake _snake;
         private readonly Apple _apple;
         private readonly Board _gameBoard;
@@ -18,7 +18,7 @@ namespace Snake
             _gameBoard = new Board(mapSize);
             _snake = new Snake();
             _apple = new Apple();
-            _renderer = new Renderer(new Board(mapSize), _snake, _apple);
+            _cliRenderer = new CLIRenderer(new Board(mapSize), _snake, _apple);
             IsGameOver = true;
             _command = new MoveRight(_snake);
             _lastUserInput = 'd';
@@ -30,7 +30,7 @@ namespace Snake
             controller.KeyboardThread.Start();
             while (IsGameOver)
             {
-                _renderer.Render();
+                _cliRenderer.Render();
                 Thread.Sleep(500);
                 _command.execute();
                 if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))

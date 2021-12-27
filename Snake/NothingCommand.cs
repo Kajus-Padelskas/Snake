@@ -1,10 +1,12 @@
-﻿namespace Snake
+﻿using System;
+
+namespace Snake
 {
     class NothingCommand : ICommand
     {
         public void execute()
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("Invalid Command");
         }
     }
 }

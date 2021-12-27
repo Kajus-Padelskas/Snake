@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Snake.Renderer;
 
 namespace Snake
 {
     class SnakeGame
     {
-        private readonly CLIRenderer _cliRenderer;
         private readonly Snake _snake;
         private readonly Apple _apple;
         private readonly Board _gameBoard;
+        private IRenderer _renderer;
         private ICommand _command;
         private char _lastUserInput;
         public bool IsGameOver { get; set; }
@@ -18,10 +19,25 @@ namespace Snake
             _gameBoard = new Board(mapSize);
             _snake = new Snake();
             _apple = new Apple();
-            _cliRenderer = new CLIRenderer(new Board(mapSize), _snake, _apple);
+            _renderer = new CLIRenderer(_gameBoard, _snake, _apple);
             IsGameOver = true;
             _command = new MoveRight(_snake);
             _lastUserInput = 'd';
+        }
+
+        public void UseCLIRenderer(bool b)
+        {
+            if (b)
+            {
+                _renderer = new CLIRenderer(_gameBoard, _snake, _apple);
+            }
+        }
+        public void UseGUIRenderer(bool b)
+        {
+            if (b)
+            {
+                _renderer = new GUIRenderer(_gameBoard, _snake, _apple);
+            }
         }
         public void StartGame()
         {
@@ -30,7 +46,7 @@ namespace Snake
             controller.KeyboardThread.Start();
             while (IsGameOver)
             {
-                _cliRenderer.Render();
+                _renderer.Render();
                 Thread.Sleep(500);
                 _command.execute();
                 if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))

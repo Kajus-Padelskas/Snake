@@ -10,6 +10,7 @@ namespace Snake
     internal class KeyBoardController
     {
         public Thread KeyboardThread { get; set; }
+        public char LastUserInput { get; set; }
 
         public KeyBoardController(SnakeGame game)
         {
@@ -19,6 +20,7 @@ namespace Snake
                 {
                     var userInput = Console.ReadKey(true);
                     game.ProcessUserCommand(userInput);
+                    Thread.Sleep(500);
                 }
             });
         }

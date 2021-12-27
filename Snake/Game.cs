@@ -11,6 +11,7 @@ namespace Snake
         private readonly Apple _apple;
         private readonly Board _gameBoard;
         private ICommand _command;
+        private char _lastUserInput;
         public bool IsGameOver { get; set; }
         public SnakeGame(int mapSize)
         {
@@ -20,6 +21,7 @@ namespace Snake
             _renderer = new Renderer(new Board(mapSize), _snake, _apple);
             IsGameOver = true;
             _command = new MoveRight(_snake);
+            _lastUserInput = 'd';
         }
         public void StartGame()
         {
@@ -29,7 +31,7 @@ namespace Snake
             while (IsGameOver)
             {
                 _renderer.Render();
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 _command.execute();
                 if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
                 {
@@ -60,15 +62,28 @@ namespace Snake
         }
         public void ProcessUserCommand(ConsoleKeyInfo userInput)
         {
+            
             try
             {
+                if (CommandIsOpposite(userInput.KeyChar)) return;
                 _command = GetUserCommand(userInput.KeyChar);
+                _lastUserInput = userInput.KeyChar;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
+
+        private bool CommandIsOpposite(char userInput)
+        {
+            if ((_lastUserInput == 'd' && userInput == 'a') || (_lastUserInput == 'a' && userInput == 'd')) 
+                return true;
+            if ((_lastUserInput == 'w' && userInput == 's') || (_lastUserInput == 's' && userInput == 'w'))
+                return true;
+            return false;
+        }
+
         private ICommand GetUserCommand(char key)
         {
             return key switch

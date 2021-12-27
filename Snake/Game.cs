@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
 
 namespace Snake
 {
@@ -8,24 +10,27 @@ namespace Snake
         private readonly Snake _snake;
         private readonly Apple _apple;
         private readonly Board _gameBoard;
-        private bool _continueGame;
+        private ICommand _command;
+        public bool IsGameOver { get; set; }
         public SnakeGame(int mapSize)
         {
             _gameBoard = new Board(mapSize);
             _snake = new Snake();
             _apple = new Apple();
             _renderer = new Renderer(new Board(mapSize), _snake, _apple);
-            _continueGame = true;
+            IsGameOver = true;
+            _command = new MoveRight(_snake);
         }
         public void StartGame()
         {
             GenerateNewApplePosition();
-            while (_continueGame)
+            KeyBoardController controller = new KeyBoardController(this);
+            controller.KeyboardThread.Start();
+            while (IsGameOver)
             {
                 _renderer.Render();
-                var userInput = Console.ReadKey();
-                Console.WriteLine();
-                ProcessUserCommand(userInput);
+                Thread.Sleep(1000);
+                _command.execute();
                 if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
                 {
                     GenerateNewApplePosition();
@@ -39,47 +44,31 @@ namespace Snake
         {
             if (_snake.DidHeadCollideWithBody())
             {
-                _continueGame = false;
+                IsGameOver = false;
             }
             else if (!SnakeNotOutOfBounds())
             {
-                _continueGame = false;
+                IsGameOver = false;
             }
         }
-
-        private void ProcessUserCommand(ConsoleKeyInfo userInput)
+        private bool SnakeNotOutOfBounds()
+        {
+            return (_snake.SnakeHeadPosition.Y < _gameBoard.Size &&
+                    _snake.SnakeHeadPosition.X < _gameBoard.Size &&
+                    _snake.SnakeHeadPosition.Y >= 0 &&
+                    _snake.SnakeHeadPosition.X >= 0);
+        }
+        public void ProcessUserCommand(ConsoleKeyInfo userInput)
         {
             try
             {
-                var command = GetUserCommand(userInput.KeyChar);
-                command.execute();
+                _command = GetUserCommand(userInput.KeyChar);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-
-        private void GenerateNewApplePosition()
-        {
-            do
-            {
-                _apple.GenerateRandomPosition(_gameBoard.Size);
-            } while (AppleIsGeneratedInSnake());
-        }
-
-        private bool AppleIsGeneratedInSnake()
-        {
-            foreach (var bodyPos in _snake.SnakeBodyPositions)
-            {
-                if (bodyPos.X == _apple.Position.X && bodyPos.Y == _apple.Position.Y)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         private ICommand GetUserCommand(char key)
         {
             return key switch
@@ -91,13 +80,17 @@ namespace Snake
                 _ => new NothingCommand()
             };
         }
-
-        private bool SnakeNotOutOfBounds()
+        private void GenerateNewApplePosition()
         {
-            return (_snake.SnakeHeadPosition.Y < _gameBoard.Size && 
-                   _snake.SnakeHeadPosition.X < _gameBoard.Size && 
-                   _snake.SnakeHeadPosition.Y >= 0 && 
-                   _snake.SnakeHeadPosition.X >= 0);
+            do
+            {
+                _apple.GenerateRandomPosition(_gameBoard.Size);
+            } while (AppleIsGeneratedInSnake());
+        }
+
+        private bool AppleIsGeneratedInSnake()
+        {
+            return _snake.SnakeBodyPositions.Any(bodyPos => bodyPos.X == _apple.Position.X && bodyPos.Y == _apple.Position.Y);
         }
     }
 }

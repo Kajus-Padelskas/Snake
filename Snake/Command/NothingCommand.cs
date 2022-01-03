@@ -4,9 +4,14 @@ namespace Snake
 {
     class NothingCommand : ICommand
     {
+        private readonly ICommand _lastUserCommand;
+        public NothingCommand(ICommand command)
+        {
+            _lastUserCommand = command;
+        }
         public void execute()
         {
-            Console.WriteLine("Invalid Command");
+            _lastUserCommand.execute();
         }
     }
 }

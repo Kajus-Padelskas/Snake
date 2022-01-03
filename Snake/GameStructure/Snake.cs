@@ -76,22 +76,22 @@ namespace Snake
             var direction = CalculateNewTailDirection();
             switch (direction)
             {
-                case 1:
+                case Position.Up:
                     newTailPos = new Point(SnakeTailPosition.X, SnakeTailPosition.Y - 1);
                     SnakeBodyPositions.AddFirst(newTailPos);
                     SnakeTailPosition = newTailPos;
                     break;
-                case 2:
+                case Position.Right:
                     newTailPos = new Point(SnakeTailPosition.X+1, SnakeTailPosition.Y);
                     SnakeBodyPositions.AddFirst(newTailPos);
                     SnakeTailPosition = newTailPos;
                     break;
-                case 3:
+                case Position.Down:
                     newTailPos = new Point(SnakeTailPosition.X, SnakeTailPosition.Y + 1);
                     SnakeBodyPositions.AddFirst(newTailPos);
                     SnakeTailPosition = newTailPos;
                     break;
-                case 4:
+                case Position.Left:
                     newTailPos = new Point(SnakeTailPosition.X - 1, SnakeTailPosition.Y);
                     SnakeBodyPositions.AddFirst(newTailPos);
                     SnakeTailPosition = newTailPos;
@@ -111,17 +111,25 @@ namespace Snake
             return false;
         }
 
-        public int CalculateNewTailDirection()
+        public Position CalculateNewTailDirection()
         {
             var subTailPos = SnakeBodyPositions.Peek(1);
             var xPosDifference = SnakeTailPosition.X - subTailPos.X;
             var yPosDifference = SnakeTailPosition.Y - subTailPos.Y;
 
-            if (xPosDifference == 0 && yPosDifference == -1) return 1;
-            if (xPosDifference == 1 && yPosDifference == 0) return 2;
-            if (xPosDifference == 0 && yPosDifference == 1) return 3;
-            if (xPosDifference == -1 && yPosDifference == 0) return 4;
-            return 0;
+            return xPosDifference switch
+            {
+                0 when yPosDifference == -1 => Position.Up,
+                1 when yPosDifference == 0 => Position.Right,
+                0 when yPosDifference == 1 => Position.Down,
+                -1 when yPosDifference == 0 => Position.Left,
+                _ => 0
+            };
         }
+    }
+
+    enum Position
+    {
+        Up = 1, Right = 2, Down = 3, Left = 4
     }
 }

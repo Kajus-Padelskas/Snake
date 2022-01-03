@@ -26,11 +26,11 @@ namespace Snake
             {
                 for (var x = 0; x < _mapBoard.Size; x++)
                 {
-                    if(IsSnakeHead(y,x)) Console.Write(2);
-                    else if (IsSnakeTail(y, x)) Console.Write(3);
-                    else if(IsSnakeBody(y,x)) Console.Write(4);
-                    else if(IsApple(y,x)) Console.Write(5);
-                    else Console.Write(0);
+                    if(IsSnakeHead(y,x)) Console.Write(Constants.SNAKE_HEAD);
+                    else if (IsSnakeTail(y, x)) Console.Write(Constants.SNAKE_TAIL);
+                    else if(IsSnakeBody(y,x)) Console.Write(Constants.SNAKE_BODY);
+                    else if(IsApple(y,x)) Console.Write(Constants.APPLE);
+                    else Console.Write(".");
                 }
                 Console.WriteLine();
             }

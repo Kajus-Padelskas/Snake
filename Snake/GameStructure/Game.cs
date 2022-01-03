@@ -47,6 +47,7 @@ namespace Snake
             {
                 _renderer.Render();
                 Thread.Sleep(Constants.TIME_OUT_FOR_RENDERING);
+                ProcessUserCommand(_controller.UserInput);
                 _command.execute();
                 if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
                 {
@@ -75,14 +76,14 @@ namespace Snake
                     _snake.SnakeHeadPosition.Y >= 0 &&
                     _snake.SnakeHeadPosition.X >= 0);
         }
-        public void ProcessUserCommand(ConsoleKeyInfo userInput)
+        public void ProcessUserCommand(char userInput)
         {
             
             try
             {
-                if (CommandIsOpposite(userInput.KeyChar)) return;
-                _command = GetUserCommand(userInput.KeyChar);
-                _controller.LastUserInput = userInput.KeyChar;
+                if (CommandIsOpposite(userInput)) return;
+                _command = GetUserCommand(userInput);
+                _controller.LastUserInput = userInput;
             }
             catch (Exception e)
             {

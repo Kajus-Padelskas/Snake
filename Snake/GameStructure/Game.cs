@@ -108,7 +108,7 @@ namespace Snake
                 's' => new MoveDown(_snake),
                 'a' => new MoveLeft(_snake),
                 'd' => new MoveRight(_snake),
-                _ => new NothingCommand()
+                _ => new NothingCommand(_command)
             };
         }
         private void GenerateNewApplePosition()

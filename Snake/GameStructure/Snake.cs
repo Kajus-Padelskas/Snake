@@ -117,14 +117,11 @@ namespace Snake
             var xPosDifference = SnakeTailPosition.X - subTailPos.X;
             var yPosDifference = SnakeTailPosition.Y - subTailPos.Y;
 
-            return xPosDifference switch
-            {
-                0 when yPosDifference == -1 => Position.Up,
-                1 when yPosDifference == 0 => Position.Right,
-                0 when yPosDifference == 1 => Position.Down,
-                -1 when yPosDifference == 0 => Position.Left,
-                _ => 0
-            };
+            if (xPosDifference == 0 && yPosDifference == -1) return Position.Up;
+            if (xPosDifference == 1 && yPosDifference == 0) return Position.Right;
+            if (xPosDifference == 0 && yPosDifference == 1) return Position.Down;
+            if (xPosDifference == -1 && yPosDifference == 0) return Position.Left;
+            return 0;
         }
     }
 

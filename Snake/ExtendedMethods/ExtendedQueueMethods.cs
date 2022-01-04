@@ -10,7 +10,7 @@ namespace Snake
 {
     internal static class ExtendedQueueMethods
     {
-        public static void AddFirst(this Queue<Point> queue, Point point)
+        public static void AddFirst<T>(this Queue<T> queue, T point)
         {
             var pointArray = queue.ToArray();
             queue.Clear();
@@ -21,7 +21,7 @@ namespace Snake
             }
         }
 
-        public static Point Peek(this Queue<Point> queue, int pos)
+        public static T Peek<T>(this Queue<T> queue, int pos)
         {
             var pointArray = queue.ToArray();
             return pointArray[pos];

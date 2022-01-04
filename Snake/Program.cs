@@ -7,7 +7,7 @@ namespace Snake
 {
     class Program
     {
-        private static readonly int MAP_SIZE = 2;
+        private static readonly int MAP_SIZE = 25;
 
         static void Main(string[] args)
         {

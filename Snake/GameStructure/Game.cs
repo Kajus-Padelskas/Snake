@@ -15,6 +15,7 @@ namespace Snake
         private ICommand _command;
         private double _gameSpeed;
         public bool IsGameOver { get; set; }
+
         public SnakeGame(int mapSize)
         {
             _gameBoard = new Board(mapSize);
@@ -34,6 +35,7 @@ namespace Snake
                 _renderer = new CLIRenderer(_gameBoard, _snake, _apple);
             }
         }
+
         public void UseGUIRenderer(bool b)
         {
             if (b)
@@ -41,33 +43,36 @@ namespace Snake
                 _renderer = new GUIRenderer(_gameBoard, _snake, _apple);
             }
         }
+
         public void StartGame()
         {
             var initialGameSpeedInMs = _gameSpeed;
-            if(_gameBoard.Size < 0 || _gameBoard.Size > 25)
+            if (_gameBoard.Size < 5 || _gameBoard.Size > 25)
             {
-                Console.WriteLine($"Map size is to small or to big, it should be at least the size of 5 or below or equal to 25, but yours is {_gameBoard.Size}");
-            } else
-            {
-                GenerateNewApplePosition();
-                _controller.KeyboardThread.Start();
-                while (!IsGameOver)
-                {
-                    _renderer.Render();
-                    Thread.Sleep((int)_gameSpeed);
-                    ProcessUserCommand(_controller.UserInput);
-                    _command.execute();
-                    if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
-                    {
-                        GenerateNewApplePosition();
-                        _snake.GrowTail();
-                        _gameSpeed -= initialGameSpeedInMs / (_gameBoard.Size * _gameBoard.Size) ;
-                    }
-                    CheckIfGameEnded();
-                    Console.Clear();
-                }
-                ShowUserGameStatus();
+                Console.WriteLine(
+                    $"Map size is to small or to big, it should be at least the size of 5 or below or equal to 25, but yours is {_gameBoard.Size}");
+                return;
             }
+
+            GenerateNewApplePosition();
+            _controller.KeyboardThread.Start();
+            while (!IsGameOver)
+            {
+                _renderer.Render();
+                Thread.Sleep((int) _gameSpeed);
+                ProcessUserCommand(_controller.UserInput);
+                _command.execute();
+                if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
+                {
+                    GenerateNewApplePosition();
+                    _snake.GrowTail();
+                    _gameSpeed -= initialGameSpeedInMs / (_gameBoard.Size * _gameBoard.Size);
+                }
+                CheckIfGameEnded();
+                Console.Clear();
+            }
+
+            ShowUserGameStatus();
         }
 
         private void ShowUserGameStatus()
@@ -92,6 +97,7 @@ namespace Snake
                 IsGameOver = true;
             }
         }
+
         private bool SnakeNotOutOfBounds()
         {
             return (_snake.SnakeHeadPosition.Y < _gameBoard.Size &&
@@ -99,9 +105,9 @@ namespace Snake
                     _snake.SnakeHeadPosition.Y >= 0 &&
                     _snake.SnakeHeadPosition.X >= 0);
         }
+
         public void ProcessUserCommand(char userInput)
         {
-            
             try
             {
                 if (CommandIsOpposite(userInput)) return;
@@ -116,9 +122,11 @@ namespace Snake
 
         private bool CommandIsOpposite(char userInput)
         {
-            if ((_controller.LastUserInput == 'd' && userInput == 'a') || (_controller.LastUserInput == 'a' && userInput == 'd')) 
+            if ((_controller.LastUserInput == 'd' && userInput == 'a') ||
+                (_controller.LastUserInput == 'a' && userInput == 'd'))
                 return true;
-            if ((_controller.LastUserInput == 'w' && userInput == 's') || (_controller.LastUserInput == 's' && userInput == 'w'))
+            if ((_controller.LastUserInput == 'w' && userInput == 's') ||
+                (_controller.LastUserInput == 's' && userInput == 'w'))
                 return true;
             return false;
         }
@@ -134,6 +142,7 @@ namespace Snake
                 _ => new NothingCommand(_command)
             };
         }
+
         private void GenerateNewApplePosition()
         {
             do
@@ -144,7 +153,8 @@ namespace Snake
 
         private bool AppleIsGeneratedInSnake()
         {
-            return _snake.SnakeBodyPositions.Any(bodyPos => bodyPos.X == _apple.Position.X && bodyPos.Y == _apple.Position.Y);
+            return _snake.SnakeBodyPositions.Any(bodyPos =>
+                bodyPos.X == _apple.Position.X && bodyPos.Y == _apple.Position.Y);
         }
     }
 }

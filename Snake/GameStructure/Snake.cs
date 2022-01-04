@@ -12,8 +12,8 @@ namespace Snake
 
         public Snake()
         {
-            SnakeHeadPosition = new Point(Constants.SNAKE_START_X_POS + 1, Constants.SNAKE_START_Y_POS + 1);
-            SnakeTailPosition = new Point(Constants.SNAKE_START_X_POS, Constants.SNAKE_START_Y_POS + 1);
+            SnakeHeadPosition = new Point(Constants.SNAKE_START_X_POS + 1, Constants.SNAKE_START_Y_POS);
+            SnakeTailPosition = new Point(Constants.SNAKE_START_X_POS, Constants.SNAKE_START_Y_POS);
             SnakeBodyPositions = new Queue<Point>();
             SnakeBodyPositions.Enqueue(SnakeTailPosition);
             SnakeBodyPositions.Enqueue(SnakeHeadPosition);
@@ -72,33 +72,31 @@ namespace Snake
         }
         public void GrowTail()
         {
-            Point newTailPos;
             var direction = CalculateNewTailDirection();
             switch (direction)
             {
                 case Position.Up:
-                    newTailPos = new Point(SnakeTailPosition.X, SnakeTailPosition.Y - 1);
-                    SnakeBodyPositions.AddFirst(newTailPos);
-                    SnakeTailPosition = newTailPos;
+                    PushNewTailPosition(SnakeTailPosition.X, SnakeTailPosition.Y - 1);
                     break;
                 case Position.Right:
-                    newTailPos = new Point(SnakeTailPosition.X+1, SnakeTailPosition.Y);
-                    SnakeBodyPositions.AddFirst(newTailPos);
-                    SnakeTailPosition = newTailPos;
+                    PushNewTailPosition(SnakeTailPosition.X+1, SnakeTailPosition.Y);
                     break;
                 case Position.Down:
-                    newTailPos = new Point(SnakeTailPosition.X, SnakeTailPosition.Y + 1);
-                    SnakeBodyPositions.AddFirst(newTailPos);
-                    SnakeTailPosition = newTailPos;
+                    PushNewTailPosition(SnakeTailPosition.X, SnakeTailPosition.Y + 1);
                     break;
                 case Position.Left:
-                    newTailPos = new Point(SnakeTailPosition.X - 1, SnakeTailPosition.Y);
-                    SnakeBodyPositions.AddFirst(newTailPos);
-                    SnakeTailPosition = newTailPos;
+                    PushNewTailPosition(SnakeTailPosition.X - 1, SnakeTailPosition.Y);
                     break;
                 default:
                     break;
             }
+        }
+
+        public void PushNewTailPosition(int x, int y)
+        {
+            var newTailPos = new Point(x, y);
+            SnakeBodyPositions.AddFirst(newTailPos);
+            SnakeTailPosition = newTailPos;
         }
 
         public bool DidHeadCollideWithBody()
@@ -123,10 +121,5 @@ namespace Snake
             if (xPosDifference == -1 && yPosDifference == 0) return Position.Left;
             return 0;
         }
-    }
-
-    enum Position
-    {
-        Up = 1, Right = 2, Down = 3, Left = 4
     }
 }

@@ -7,10 +7,11 @@ namespace Snake
 {
     class Program
     {
+        private static readonly int MAP_SIZE = 2;
+
         static void Main(string[] args)
         {
-            SnakeGame game = new SnakeGame(10);
-            game.UseCLIRenderer(true);
+            SnakeGame game = new(MAP_SIZE);
             game.StartGame();
         }
     }

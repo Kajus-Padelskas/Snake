@@ -17,7 +17,7 @@ namespace Snake
         {
             KeyboardThread = new Thread(() =>
             {
-                while (game.IsGameOver)
+                while (!game.IsGameOver)
                 {
                     var pressedKey = Console.ReadKey(true);
                     UserInput = pressedKey.KeyChar;

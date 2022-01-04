@@ -13,6 +13,7 @@ namespace Snake
         private readonly KeyBoardController _controller;
         private IRenderer _renderer;
         private ICommand _command;
+        private double _gameSpeed;
         public bool IsGameOver { get; set; }
         public SnakeGame(int mapSize)
         {
@@ -20,9 +21,10 @@ namespace Snake
             _snake = new Snake();
             _apple = new Apple();
             _renderer = new CLIRenderer(_gameBoard, _snake, _apple);
-            IsGameOver = true;
+            IsGameOver = false;
             _command = new MoveRight(_snake);
             _controller = new KeyBoardController(this);
+            _gameSpeed = Constants.MAX_RENDERING_TIMEOUT - mapSize * mapSize;
         }
 
         public void UseCLIRenderer(bool b)
@@ -41,32 +43,53 @@ namespace Snake
         }
         public void StartGame()
         {
-            GenerateNewApplePosition();
-            _controller.KeyboardThread.Start();
-            while (IsGameOver)
+            var initialGameSpeedInMs = _gameSpeed;
+            if(_gameBoard.Size < 0 || _gameBoard.Size > 25)
             {
-                _renderer.Render();
-                Thread.Sleep(Constants.TIME_OUT_FOR_RENDERING);
-                ProcessUserCommand(_controller.UserInput);
-                _command.execute();
-                if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
+                Console.WriteLine($"Map size is to small or to big, it should be at least the size of 5 or below or equal to 25, but yours is {_gameBoard.Size}");
+            } else
+            {
+                GenerateNewApplePosition();
+                _controller.KeyboardThread.Start();
+                while (!IsGameOver)
                 {
-                    GenerateNewApplePosition();
-                    _snake.GrowTail();
+                    _renderer.Render();
+                    Thread.Sleep((int)_gameSpeed);
+                    ProcessUserCommand(_controller.UserInput);
+                    _command.execute();
+                    if (_apple.IsAppleCollected(_snake.SnakeHeadPosition))
+                    {
+                        GenerateNewApplePosition();
+                        _snake.GrowTail();
+                        _gameSpeed -= initialGameSpeedInMs / (_gameBoard.Size * _gameBoard.Size) ;
+                    }
+                    CheckIfGameEnded();
+                    Console.Clear();
                 }
-                CheckIfGameEnded();
+                ShowUserGameStatus();
             }
+        }
+
+        private void ShowUserGameStatus()
+        {
+            Console.WriteLine(_snake.SnakeBodyPositions.Count == _gameBoard.Size * _gameBoard.Size
+                ? "Congratz you won"
+                : "Get good kid");
         }
 
         private void CheckIfGameEnded()
         {
             if (_snake.DidHeadCollideWithBody())
             {
-                IsGameOver = false;
+                IsGameOver = true;
             }
             else if (!SnakeNotOutOfBounds())
             {
-                IsGameOver = false;
+                IsGameOver = true;
+            }
+            else if (_snake.SnakeBodyPositions.Count == _gameBoard.Size * _gameBoard.Size)
+            {
+                IsGameOver = true;
             }
         }
         private bool SnakeNotOutOfBounds()
